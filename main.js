@@ -1,24 +1,86 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+import "./style.scss";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+import Lenis from "@studio-freight/lenis";
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+gsap.registerPlugin(ScrollTrigger);
 
-setupCounter(document.querySelector('#counter'))
+function app() {
+    let lenis;
+    let Sections = gsap.utils.toArray("section"),
+        getTotalWidth = () => {
+            let width = 0;
+            Sections.forEach((el) => (width += el.offsetWidth));
+            return width;
+        },
+        snap;
+
+    lenis = new Lenis();
+    lenis.on("scroll", ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+        lenis.raf(time * 1000);
+    });
+
+    gsap.to(Sections, {
+        x: () => -getTotalWidth() + window.innerWidth,
+        ease: "none",
+        scrollTrigger: {
+            trigger: "#HorizontalWrapper",
+            pin: true,
+            start: 0,
+            end: () =>
+                "+=" +
+                (document.querySelector("#HorizontalWrapper").scrollWidth - window.innerWidth),
+            invalidateOnRefresh: true,
+            onRefresh() {
+                let totalWidth = getTotalWidth(),
+                    accumulatedWidth = 0,
+                    progressArray = Sections.map((el) => {
+                        accumulatedWidth += el.offsetWidth;
+                        return accumulatedWidth / totalWidth;
+                    });
+                progressArray.unshift(0);
+                snap = gsap.utils.snap(progressArray);
+            },
+            scrub: true,
+            markers: "true",
+        },
+    });
+
+    gsap.to("progress", {
+        value: 100,
+        ease: "none",
+        scrollTrigger: { scrub: 0.3 },
+    });
+}
+window.onload = () => {
+    app();
+};
+function getTailleTotalePage() {
+    // Sélectionnez le corps de la page
+    var body = document.body;
+
+    // Sélectionnez tous les éléments enfants du corps
+    var elements = body.getElementsByTagName("*");
+
+    // Initialisez la taille totale à 0
+    var tailleTotale = 0;
+
+    // Parcourez tous les éléments et ajoutez leur hauteur à la taille totale
+    for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        var elementStyle = window.getComputedStyle(element);
+
+        // Ajoutez la hauteur et la marge supérieure et inférieure de chaque élément
+        tailleTotale +=
+            element.offsetHeight +
+            parseInt(elementStyle.marginTop) +
+            parseInt(elementStyle.marginBottom);
+    }
+
+    // Retournez la taille totale
+    return tailleTotale;
+}
+
+let totalSize = getTailleTotalePage();

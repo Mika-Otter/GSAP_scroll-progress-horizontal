@@ -1,0 +1,72 @@
+$bg-color-1: #0c0f10;
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+progress {
+    position: fixed;
+    margin: 0;
+    top: -5vh;
+    left: 0;
+    -webkit-appearance: none;
+    transform: rotate(90deg);
+    transform-origin: left bottom;
+    appearance: none;
+    width: 100dvh;
+    height: 5vh;
+    border: none;
+    background: transparent;
+    z-index: 2;
+}
+progress::-webkit-progress-bar {
+    background: transparent;
+}
+progress::-webkit-progress-value {
+    background: $bg-color-1;
+    background-attachment: fixed;
+}
+progress::-moz-progress-bar {
+    background: $bg-color-1;
+    background-attachment: fixed;
+}
+#HorizontalWrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+section {
+    position: relative;
+    height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+}
+
+#HorizontalWrapper #SectionA {
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    background: yellow;
+}
+
+#HorizontalWrapper #SectionA h1 {
+    position: absolute;
+}
+
+#HorizontalWrapper #SectionB {
+    justify-content: flex-start;
+    width: 250vw;
+    background: grey;
+}
+.container div {
+    height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+}
